@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 class Node {
@@ -85,17 +86,18 @@ public:
         delete current;
     }
 
-    bool update(string namaProduk, int newHarga) {
+    bool update(string oldNamaProduk, string newNamaProduk, int newHarga) {
         Node* current = head;
-        while (current != nullptr && current->namaProduk != namaProduk) {
+        while (current != nullptr && current->namaProduk != oldNamaProduk) {
             current = current->next;
         }
 
         if (current == nullptr) {
-            cout << "Data dengan nama produk " << namaProduk << " tidak ditemukan.\n";
+            cout << "Data dengan nama produk " << oldNamaProduk << " tidak ditemukan.\n";
             return false;
         }
 
+        current->namaProduk = newNamaProduk;
         current->harga = newHarga;
         return true;
     }
@@ -113,9 +115,9 @@ public:
 
     void display() {
         Node* current = head;
-        cout << "Nama Produk\tHarga" << endl;
+        cout << left << setw(20) << "Nama Produk" << setw(10) << "Harga" << endl;
         while (current != nullptr) {
-            cout << current->namaProduk << "\t\t" << current->harga << endl;
+            cout << left << setw(20) << current->namaProduk << setw(10) << current->harga << endl;
             current = current->next;
         }
         cout << endl;
@@ -144,10 +146,12 @@ int main() {
         cout << "6. Hapus Seluruh Data" << endl;
         cout << "7. Tampilkan Data" << endl;
         cout << "8. Exit" << endl;
+        cout << endl;
 
         int choice;
         cout << "Enter your choice: ";
         cin >> choice;
+        cout << endl;
 
         switch (choice) {
             case 1: {
@@ -168,13 +172,15 @@ int main() {
                 break;
             }
             case 3: {
-                string namaProduk;
+                string oldNamaProduk, newNamaProduk;
                 int newHarga;
                 cout << "Enter nama produk yang akan diupdate: ";
-                cin >> namaProduk;
+                cin >> oldNamaProduk;
+                cout << "Enter nama produk baru: ";
+                cin >> newNamaProduk;
                 cout << "Enter harga baru: ";
                 cin >> newHarga;
-                bool updated = list.update(namaProduk, newHarga);
+                bool updated = list.update(oldNamaProduk, newNamaProduk, newHarga);
                 if (!updated) {
                     cout << "Data not found" << endl;
                 }
@@ -193,11 +199,15 @@ int main() {
                 break;
             }
             case 5: {
-                // Implement delete specific position if needed
+                string namaProduk;
+                cout << "Enter nama produk yang akan dihapus: ";
+                cin >> namaProduk;
+                list.deleteNode(namaProduk);
                 break;
             }
             case 6: {
                 list.deleteAll();
+                cout << "Semua data telah dihapus." << endl;
                 break;
             }
             case 7: {
